@@ -205,7 +205,7 @@
     <nav aria-label="Site">
       <a class="wide-only" href="https://vexproof.dev/">Product</a>
       <a href="https://vexproof.dev/#pricing">Pricing</a>
-      <a href="https://github.com/septakis-io/vexproof">GitHub</a>
+      <a href="https://github.com/septakis/vexproof">GitHub</a>
       <a class="wide-only" href="https://www.npmjs.com/package/vexproof">npm</a>
     </nav>
   </div>
@@ -474,7 +474,7 @@ curl -sf -H "X-Api-Key: $KEY" -F projectName=$NAME -F projectVersion=$VERSION -F
 - run: npx vite build
 - run: npx @cyclonedx/cyclonedx-npm --omit dev -o bom.lockfile.json
 - run: npm audit --json --omit dev &gt; audit.json || true
-- uses: septakis-io/vexproof@v0
+- uses: septakis/vexproof@v0
   with:
     lockfile: bom.lockfile.json
     modules: vexproof-modules.json
@@ -665,7 +665,7 @@ npx vexproof … --deploy build --deploy node_modules    <span class="c"># runs 
 vexproof review --vex &lt;file&gt; --id &lt;advisory&gt; --state &lt;state&gt; --detail &lt;text&gt; --by &lt;name&gt; [options]
 vexproof rules derive --lockfile &lt;sbom&gt; --findings &lt;file&gt; [options]
 vexproof dependabot --vex &lt;file&gt; --lockfile &lt;sbom&gt; [options]</pre></div>
-  <p>The <a href="#dependabot"><code>dependabot</code></a> command has its own page.</p>
+  <p>The <a href="#dependabot"><code>dependabot</code></a> command <span class="chip pro">Pro</span> has its own page.</p>
 
   <h3>Run options</h3>
   <div class="tw"><table>
@@ -746,7 +746,7 @@ vexproof dependabot --vex &lt;file&gt; --lockfile &lt;sbom&gt; [options]</pre></
 <section class="doc" id="action">
   <p class="eyebrow">Reference</p>
   <h2>GitHub Action</h2>
-  <p><code>septakis-io/vexproof@v0</code> is a composite action that runs <code>npx vexproof</code> with these inputs. Run it after your build and SBOM steps.</p>
+  <p><code>septakis/vexproof@v0</code> is a composite action that runs <code>npx vexproof</code> with these inputs. Run it after your build and SBOM steps.</p>
   <div class="tw"><table>
     <thead><tr><th>Input</th><th>Default</th><th>Maps to</th></tr></thead>
     <tbody>
@@ -763,7 +763,7 @@ vexproof dependabot --vex &lt;file&gt; --lockfile &lt;sbom&gt; [options]</pre></
       <tr><td><code>baseline</code> <span class="chip pro">Pro</span></td><td></td><td><code>--baseline</code></td></tr>
       <tr><td><code>fail-on</code></td><td></td><td><code>--fail-on</code></td></tr>
       <tr><td><code>license</code></td><td></td><td><code>VEXPROOF_LICENSE</code>. Pass a secret.</td></tr>
-      <tr><td><code>dependabot</code></td><td><code>false</code></td><td>Run <a href="#dependabot"><code>vexproof dependabot</code></a> after the VEX is written, including when <code>fail-on</code> stopped the job.</td></tr>
+      <tr><td><code>dependabot</code> <span class="chip pro">Pro</span></td><td><code>false</code></td><td>Run <a href="#dependabot"><code>vexproof dependabot</code></a> after the VEX is written, including when <code>fail-on</code> stopped the job.</td></tr>
       <tr><td><code>dependabot-token</code></td><td></td><td>A token that can write Dependabot alerts. Pass a secret. The workflow's own token cannot.</td></tr>
       <tr><td><code>dependabot-manifest</code></td><td>repository root</td><td><code>--manifest</code>, comma-separated</td></tr>
       <tr><td><code>version</code></td><td><code>latest</code></td><td>The vexproof version npx runs. Pin it for reproducible builds.</td></tr>
@@ -775,8 +775,8 @@ vexproof dependabot --vex &lt;file&gt; --lockfile &lt;sbom&gt; [options]</pre></
 <!-- ============================== DEPENDABOT ============================== -->
 <section class="doc" id="dependabot">
   <p class="eyebrow">Reference</p>
-  <h2>Dependabot</h2>
-  <p>Dependabot reads no VEX, so an alert for code that never shipped stays open. <code>vexproof dependabot</code> applies a VEX file to a repository's npm alerts through GitHub's API.</p>
+  <h2>Dependabot <span class="chip pro">Pro</span></h2>
+  <p>Dependabot reads no VEX, so an alert for code that never shipped stays open. <code>vexproof dependabot</code> applies a VEX file to a repository's npm alerts through GitHub's API. Without a license that includes <code>dependabot</code>, the command says so and changes nothing, <code>--dry-run</code> included.</p>
   <div class="code"><pre>vexproof dependabot --vex vex.cdx.json --lockfile bom.lockfile.json --dry-run</pre></div>
   <div class="tw"><table>
     <thead><tr><th>Option</th><th>Meaning</th></tr></thead>
@@ -786,6 +786,7 @@ vexproof dependabot --vex &lt;file&gt; --lockfile &lt;sbom&gt; [options]</pre></
       <tr><td><code>--manifest &lt;path&gt;</code></td><td>A manifest file or a folder whose alerts to change. Repeatable. Default: the current folder.</td></tr>
       <tr><td><code>--repo owner/name</code></td><td>Default <code>GITHUB_REPOSITORY</code>, then the git origin.</td></tr>
       <tr><td><code>--token &lt;token&gt;</code></td><td>Or <code>VEXPROOF_DEPENDABOT_TOKEN</code>, <code>GH_TOKEN</code>, <code>GITHUB_TOKEN</code>.</td></tr>
+      <tr><td><code>--link &lt;url&gt;</code></td><td>What the dismissal comment links to. Default: the Actions run.</td></tr>
       <tr><td><code>--dry-run</code></td><td>Print what would change.</td></tr>
     </tbody>
   </table></div>
@@ -797,7 +798,7 @@ vexproof dependabot --vex &lt;file&gt; --lockfile &lt;sbom&gt; [options]</pre></
   </dl>
   <h3>Token</h3>
   <p>The token needs "Dependabot alerts" read and write: a fine-grained token or a GitHub App token. A workflow's own <code>GITHUB_TOKEN</code> can read alerts (<code>permissions: vulnerability-alerts: read</code>) but cannot change them, so it only works with <code>--dry-run</code>. In Actions, only a run of the default branch changes alerts, because Dependabot alerts describe that branch; other runs preview. A VEX written with <code>--browser-only</code> is refused.</p>
-  <p>Exit codes: 0 when the sync ran, 2 when it could not (token, repository, a VEX that does not match the lockfile) or an update failed.</p>
+  <p>Exit codes: 0 when the sync ran or no license covers it, 2 when it could not (token, repository, a VEX that does not match the lockfile) or an update failed.</p>
 </section>
 
 <!-- ============================== PLUGINS ============================== -->
@@ -1104,6 +1105,7 @@ new VexproofPlugin({ output: 'vexproof-modules.json' })</pre></div>
     <dt>…; running free features only</dt><dd>The license didn't verify, was revoked, or expired more than 14 days ago.</dd>
     <dt>license … expired on …; Pro features stop on …</dt><dd>In the grace period. Renew before the date given.</dd>
     <dt>--baseline is a Pro feature; ignoring it</dt><dd>Same for <code>--report</code> and <code>--rules</code>. The run otherwise completes.</dd>
+    <dt>vexproof dependabot is a Pro feature; no alerts changed</dt><dd>Exits 0, so a job without a license still passes.</dd>
     <dt>--fail-on new needs a Pro --baseline; gate not applied</dt><dd>Use <code>--fail-on in_triage</code>, or add a baseline.</dd>
     <dt>aliases from OSV for x of y advisories</dt><dd>Fewer than all means OSV was unreachable or didn't know some IDs; those keep only their own.</dd>
     <dt>the lockfile SBOM has no serialNumber…</dt><dd>The CycloneDX VEX can't link into the SBOM, so Trivy and Dependency-Track won't apply it. OpenVEX is unaffected. Generate the SBOM without <code>--output-reproducible</code>.</dd>
@@ -1120,13 +1122,24 @@ new VexproofPlugin({ output: 'vexproof-modules.json' })</pre></div>
       <tr><td>Package-level verdicts, CycloneDX and OpenVEX output</td><td>✓</td><td>✓</td></tr>
       <tr><td>All findings formats, OSV lookup, GitHub Action</td><td>✓</td><td>✓</td></tr>
       <tr><td>Server deployments, <code>--deploy</code></td><td>✓</td><td>✓</td></tr>
-      <tr><td>Dependabot alert dismissal, <code>vexproof dependabot</code></td><td>✓</td><td>✓</td></tr>
       <tr><td><code>vexproof review</code>, <code>--fail-on in_triage</code></td><td>✓</td><td>✓</td></tr>
       <tr><td>Count of findings Pro would settle</td><td>✓</td><td></td></tr>
       <tr><td>Module-level verdicts (<code>modules</code>)</td><td></td><td>✓</td></tr>
       <tr><td>Evidence report, <code>--report</code> (<code>report</code>)</td><td></td><td>✓</td></tr>
       <tr><td>Baselines and <code>--fail-on new</code> (<code>baseline</code>)</td><td></td><td>✓</td></tr>
       <tr><td>Derived rules, <code>--rules</code> and <code>--accept-derived</code> (<code>modules</code>)</td><td></td><td>✓</td></tr>
+      <tr><td>Dependabot alert dismissal, <code>vexproof dependabot</code> (<code>dependabot</code>)</td><td></td><td>✓</td></tr>
+      <tr><td>Email support, paid licenses</td><td></td><td>✓</td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="reserved">Reserved for Pro</h3>
+  <p>These features aren't built yet and have no dates. Their names are reserved in the license format, and keys issued today already carry them, so when one ships it works with the key you have.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Planned feature</th><th>Key name</th></tr></thead>
+    <tbody>
+      <tr><td>CSAF output</td><td><code>csaf</code></td></tr>
+      <tr><td>Signed VEX that proves who produced it</td><td><code>signing</code></td></tr>
+      <tr><td>A rollup across repositories</td><td><code>rollup</code></td></tr>
     </tbody>
   </table></div>
   <h3 id="code-license">How the code is licensed</h3>
@@ -1135,12 +1148,12 @@ new VexproofPlugin({ output: 'vexproof-modules.json' })</pre></div>
     <thead><tr><th>Files</th><th>License</th><th>What it means</th></tr></thead>
     <tbody>
       <tr><td>Everything outside <code>src/pro/</code>: the CLI, bundler plugins, scanner readers, package-level analysis, both VEX writers, <code>review</code> and <code>rules derive</code></td><td>MIT (<code>LICENSE</code>)</td><td>Use, change and redistribute it freely. A copy with <code>src/pro/</code> deleted still runs all of it.</td></tr>
-      <tr><td><code>src/pro/</code>: module-level analysis and its rules, baselines, the report, the key check</td><td>vexproof Pro License (<code>src/pro/LICENSE.md</code>)</td><td>Read it, install it, pass on unmodified copies. Using the Pro features needs a license key. It can't be changed and redistributed, or copied into other software. Source-available, not open source.</td></tr>
+      <tr><td><code>src/pro/</code>: module-level analysis and its rules, baselines, the report, Dependabot alert dismissal, the key check</td><td>vexproof Pro License (<code>src/pro/LICENSE.md</code>)</td><td>Read it, install it, pass on unmodified copies. Using the Pro features needs a license key. It can't be changed and redistributed, or copied into other software. Source-available, not open source.</td></tr>
     </tbody>
   </table></div>
   <ul>
     <li>Every source file names its license in an <code>SPDX-License-Identifier</code> line.</li>
-    <li>Without a key, vexproof uses the Pro files only to check for a key and to count the findings Pro would settle.</li>
+    <li>Without a key, vexproof uses the Pro files only to check for a key, to read the rules that ship with it, and to count the findings Pro would settle.</li>
     <li>What vexproof writes for you (VEX, reports, rules) is yours, and stays valid after a key expires.</li>
     <li><code>package.json</code> says <code>SEE LICENSE IN LICENSE</code>, npm's form for a package that isn't under one SPDX license. A license scanner that only allows MIT will ask about it.</li>
   </ul>
@@ -1161,8 +1174,10 @@ new VexproofPlugin({ output: 'vexproof-modules.json' })</pre></div>
   <h3 id="pricing">Pricing</h3>
   <p>Pro is $1,200 per year for an organization of up to 500 employees, for every developer and repository in it. There are no seats.</p>
   <p>For a larger organization, <a href="mailto:hello@septakis.io?subject=vexproof%20Pro%20for%20a%20larger%20organization">get in touch</a>. We price it for the part of the company the license covers: the whole company, or a subsidiary or division that buys for itself. A key covers only the organization it names.</p>
+  <h3 id="support">Support</h3>
+  <p>A paid license includes email support at <a href="mailto:hello@septakis.io?subject=vexproof%20Pro%20support">hello@septakis.io</a>, with a response within a few business days. Open-source projects get help through GitHub issues.</p>
   <h3 id="open-source">Open-source projects</h3>
-  <p>Pro is free for open-source projects: public repositories under an OSI-approved license. <a href="https://github.com/septakis-io/vexproof/issues/new?title=Open-source%20license%20request&amp;body=Repositories%3A%20">Request one</a> with the repository URLs; licenses run a year and renew on request.</p>
+  <p>Pro is free for open-source projects: public repositories under an OSI-approved license. <a href="https://github.com/septakis/vexproof/issues/new?title=Open-source%20license%20request&amp;body=Repositories%3A%20">Request one</a> with the repository URLs; licenses run a year and renew on request.</p>
   <p>An open-source license names its repositories, and unlocks Pro only when vexproof runs in one of them. vexproof finds the repository without a network call, in this order:</p>
   <ol>
     <li><code>GITHUB_REPOSITORY</code> (with <code>GITHUB_SERVER_URL</code>), GitLab's <code>CI_PROJECT_PATH</code> (with <code>CI_SERVER_HOST</code>), or Bitbucket's <code>BITBUCKET_REPO_FULL_NAME</code>;</li>
@@ -1177,7 +1192,7 @@ new VexproofPlugin({ output: 'vexproof-modules.json' })</pre></div>
 <footer class="foot">
   <div class="foot-in">
     <p>vexproof is made by <a class="maker" href="https://septakis.io"><svg class="pk" viewBox="0 0 64 64" aria-hidden="true"><path d="M32.00 5.00L54.67 15.92Q55.65 26.26 46.98 34.75L41.93 22.75Q40.69 10.69 32.00 5.00Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M54.67 15.92L60.27 40.45Q52.79 47.66 40.76 46.18L46.98 34.75Q55.65 26.26 54.67 15.92Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M60.27 40.45L44.58 60.13Q34.28 58.77 27.94 48.44L40.76 46.18Q52.79 47.66 60.27 40.45Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M44.58 60.13L19.42 60.13Q14.05 51.23 18.18 39.83L27.94 48.44Q34.28 58.77 44.58 60.13Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M19.42 60.13L3.73 40.45Q7.34 30.71 18.83 26.83L18.18 39.83Q14.05 51.23 19.42 60.13Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M3.73 40.45L9.33 15.92Q19.19 12.67 29.40 19.23L18.83 26.83Q7.34 30.71 3.73 40.45Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M9.33 15.92L32.00 5.00Q40.69 10.69 41.93 22.75L29.40 19.23Q19.19 12.67 9.33 15.92Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round"/><path d="M39.28 25.75L42.99 34.55L38.42 42.93L29.02 44.59L21.86 38.27L22.34 28.74L30.09 23.17Z" fill="var(--accent)"/></svg><span class="wm">Septakis</span></a>, a Chicago company.</p>
-    <nav aria-label="Footer"><a href="https://vexproof.dev/">Product</a><a href="https://vexproof.dev/#pricing">Pricing</a><a href="https://github.com/septakis-io/vexproof">GitHub</a><a href="https://www.npmjs.com/package/vexproof">npm</a></nav>
+    <nav aria-label="Footer"><a href="https://vexproof.dev/">Product</a><a href="https://vexproof.dev/#pricing">Pricing</a><a href="https://github.com/septakis/vexproof">GitHub</a><a href="https://www.npmjs.com/package/vexproof">npm</a></nav>
     <div class="legal"><span>© 2026 Septakis</span><span>The vexproof core is MIT-licensed. Pro has its own commercial license.</span></div>
   </div>
 </footer>

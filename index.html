@@ -417,6 +417,11 @@
   .tier li{padding:7px 0 7px 22px;position:relative;font-size:.92rem;border-top:1px solid var(--rule)}
   .tier.pro li{font-weight:500;color:var(--ink)}
   .tier li::before{content:"";position:absolute;left:2px;top:.95em;width:8px;height:5px;border-left:1.5px solid var(--accent);border-bottom:1.5px solid var(--accent);transform:rotate(-45deg)}
+  .tier .plus.next{color:var(--ink-3);margin-top:-6px}
+  .tier ul.planned{flex:none;margin-bottom:8px}
+  .tier.pro ul.planned li{font-weight:400;color:var(--ink-2)}
+  .tier ul.planned li::before{width:6px;height:6px;top:.8em;border:1.5px solid var(--ink-3);border-radius:50%;transform:none}
+  .tier .next-note{font-size:.84rem;line-height:1.5;color:var(--ink-2);margin:0 0 22px}
   .tier .btn{justify-content:center}
   form.notify{display:flex;flex-wrap:wrap;gap:8px}
   form.notify label{flex-basis:100%;font-size:.84rem;font-weight:500;color:var(--ink-2)}
@@ -857,7 +862,7 @@
       <div class="label"><span>Compare</span></div>
       <div class="body">
         <h2>How it fits with what you have</h2>
-        <p>vexproof doesn't replace your scanner or reachability platform. It reads what they report and writes VEX they apply, as a CLI or a GitHub Action. Every statement carries both the CVE and GHSA IDs, so the same file works in Trivy, Grype and Dependency-Track. GitHub's Dependabot reads no VEX, so the Action can also dismiss the alerts a run settles.</p>
+        <p>vexproof doesn't replace your scanner or reachability platform. It reads what they report and writes VEX they apply, as a CLI or a GitHub Action. Every statement carries both the CVE and GHSA IDs, so the same file works in Trivy, Grype and Dependency-Track. GitHub's Dependabot reads no VEX, so with Pro the Action can also dismiss the alerts a run settles.</p>
         <div class="tablewrap">
           <table class="compare">
             <thead><tr><th></th><th>Lockfile scanners</th><th>Reachability platforms</th><th class="us">vexproof</th></tr></thead>
@@ -911,7 +916,7 @@
       <div class="label"><span>Pro and pricing</span></div>
       <div class="body">
         <h2>Pro: for the findings that stay open</h2>
-        <p>Free proves which packages never ship. Pro is for every release after that: it checks the packages that do ship file by file, keeps each reviewed decision settled until the code it rests on changes, and writes the evidence report you hand to a customer or auditor.</p>
+        <p>Free proves which packages never ship. Pro is for every release after that: it checks the packages that do ship file by file, keeps each reviewed decision settled until the code it rests on changes, dismisses the Dependabot alerts a run settles, and writes the evidence report you hand to a customer or auditor.</p>
 
         <figure class="fig pro-chart">
           <div class="fig-bar"><span><b>Findings settled</b>, app by app</span><span>1 real project, 3 sample apps</span></div>
@@ -984,7 +989,7 @@
               <li>All supported bundlers, package managers and scanners</li>
               <li>Next.js and Nuxt deployments</li>
               <li>Reviewed decisions, one per root cause</li>
-              <li>CI gate, GitHub Action and Dependabot alert dismissal</li>
+              <li>CI gate and GitHub Action</li>
             </ul>
             <a class="btn ghost" href="#setup">Start free</a>
           </div>
@@ -999,8 +1004,17 @@
               <li>Printable evidence report</li>
               <li>Rules derived from each advisory's fix</li>
               <li>A CI gate that fails only on new risk</li>
+              <li>Dependabot alert dismissal across your repos</li>
               <li>License needs no network; expiry never breaks a build</li>
+              <li>Email support, with a response within a few business days</li>
             </ul>
+            <p class="plus next">Planned for Pro, no dates yet</p>
+            <ul class="planned">
+              <li>CSAF output</li>
+              <li>Signed VEX that proves who produced it</li>
+              <li>A rollup across repos</li>
+            </ul>
+            <p class="next-note">Keys issued today already cover these.</p>
             <form class="notify" onsubmit="event.preventDefault();this.querySelector('button').textContent='Thanks';this.querySelector('input').disabled=true">
               <label for="notify-email">Leave your email and we'll reach out</label>
               <input id="notify-email" type="email" placeholder="you@company.com" autocomplete="email" required>
@@ -1011,7 +1025,7 @@
         <div class="oss">
           <div>
             <h3>Working on open source? Pro is free.</h3>
-            <p>Public repositories under an OSI-approved license get a free Pro license, renewed yearly. It names your repositories and unlocks Pro only when vexproof runs in one of them, checked on the runner from your CI variables or git remote.</p>
+            <p>Public repositories under an OSI-approved license get a free Pro license, renewed yearly. It names your repositories and unlocks Pro only when vexproof runs in one of them, checked on the runner from your CI variables or git remote. Email support is for paid licenses; open-source projects get help through GitHub issues.</p>
           </div>
           <a class="btn ghost" href="https://github.com/septakis/vexproof/issues/new?title=Open-source%20license%20request&amp;body=Repositories%3A%20">Request a license</a>
         </div>
@@ -1030,7 +1044,7 @@
         </details>
         <details>
           <summary>Does anything leave our network?</summary>
-          <p>Your code and your build output never do. vexproof runs in your CI with no account and no telemetry, it never contacts us, and the license is a signed key checked on the runner. It is not fully offline, though. It looks things up in two public databases: OSV, to find advisories or match GHSA and CVE IDs, and the npm registry, when you derive rules from advisory fixes. Those requests carry package names, versions and advisory IDs. If you turn on Dependabot dismissal, it also calls GitHub's API for your repository's alerts. If you pass a findings file and skip alias lookup, a run makes no network calls at all.</p>
+          <p>Your code and your build output never do. vexproof runs in your CI with no account and no telemetry, it never contacts us, and the license is a signed key checked on the runner. It is not fully offline, though. It looks things up in two public databases: OSV, to find advisories or match GHSA and CVE IDs, and the npm registry, when you derive rules from advisory fixes. Those requests carry package names, versions and advisory IDs. If you turn on Dependabot dismissal in Pro, it also calls GitHub's API for your repository's alerts. If you pass a findings file and skip alias lookup, a run makes no network calls at all.</p>
         </details>
         <details>
           <summary>Is it open source?</summary>
@@ -1047,6 +1061,10 @@
         <details>
           <summary>Why now?</summary>
           <p>The everyday reason: the same findings stop being re-triaged every sprint. The regulatory one: the EU Cyber Resilience Act's reporting duties began on 11 September 2026, with the full requirements, SBOMs included, from 11 December 2027. Answering "does this CVE affect us?" in hours means already knowing what you ship, and enterprise buyers now ask for the same evidence in procurement.</p>
+        </details>
+        <details>
+          <summary>What's planned for Pro?</summary>
+          <p>Three features are reserved for Pro: CSAF output, signed VEX that proves who produced it, and a rollup across repos. We aren't promising dates. License keys issued today already cover all three, so when one ships it works with the key you have.</p>
         </details>
         <details>
           <summary>We have more than 500 employees. What does Pro cost?</summary>
